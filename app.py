@@ -8,6 +8,7 @@ import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
+import sklearn # Tambahkan import sklearn
 
 # Pastikan resource NLTK sudah diunduh (untuk deployment, ini perlu dilakukan di lingkungan server)
 nltk.download('stopwords', quiet=True)
@@ -41,6 +42,10 @@ def load_model_and_vectorizer():
 
 model, vectorizer = load_model_and_vectorizer()
 
+# Tambahkan ini untuk mencetak versi scikit-learn di Streamlit Cloud logs
+st.write(f"scikit-learn version in Streamlit: {sklearn.__version__}")
+print(f"scikit-learn version in Streamlit (log): {sklearn.__version__}")
+
 # --- Antarmuka Pengguna Streamlit ---
 st.title('Aplikasi Deteksi Emosi ISEAR')
 st.write('Masukkan teks untuk memprediksi emosi.')
@@ -51,13 +56,13 @@ if st.button('Prediksi Emosi'):
     if user_input:
         # Pra-pemrosesan teks input
         processed_input = preprocess_text(user_input)
-        
+
         # Vektorisasi teks input
         X_input = vectorizer.transform([processed_input])
-        
+
         # Prediksi emosi
         prediction = model.predict(X_input)
-        
+
         st.success(f'Emosi yang Diprediksi: **{prediction[0]}**')
     else:
         st.warning('Mohon masukkan teks terlebih dahulu.')
